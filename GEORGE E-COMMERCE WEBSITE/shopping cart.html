@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('file:///c:\\Users\\theDESIGNER\\Downloads\\todor-andonov-W89A4wK5XUA-unsplash.jpg');
+              background-size: cover; /* Ensures the image covers the entire screen */
+              background-position: center center; /* Ensures the image is centered */
+              background-attachment: fixed; /* Keeps the background fixed when scrolling */
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              min-height: 100vh;
+              padding: 40px;
+              color: #333;
+           
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+            50% { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+            100% { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+        }
+
+        h1 {
+            font-size: 36px;
+            color: honeydew;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #cart-items {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .cart-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .cart-item img {
+            width: 80px;
+            border-radius: 8px;
+        }
+
+        .cart-item div {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .cart-item .cart-actions button {
+            background-color: #e63946;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item .cart-actions button:hover {
+            background-color: #d32f2f;
+        }
+
+        .cart-item input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            font-size: 16px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .cart-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .cart-summary span {
+            font-size: 24px;
+            color: #28a745;
+        }
+
+        #add-item-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #add-item-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        #add-item-button:active {
+            transform: scale(0.98);
+        }
+
+        .checkout-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .checkout-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .checkout-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <h1>Shopping Cart</h1>
+    
+    <div id="cart-items"></div>
+
+    <button id="add-item-button" onclick="addItem()">Add More Items</button>
+
+    <div class="cart-summary">
+        <span>Total Price: $<span id="total-price">0.00</span></span>
+        <button class="checkout-button" onclick="proceedToCheckout()">Proceed to Checkout</button>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        function renderCart() {
+            const cartItemsContainer = document.getElementById("cart-items");
+            cartItemsContainer.innerHTML = "";
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                totalPrice += itemTotal;
+
+                const cartItem = document.createElement("div");
+                cartItem.classList.add("cart-item");
+                cartItem.innerHTML = `
+                    <div>
+                        <img src="${item.image}" alt="${item.title}">
+                    </div>
+                    <div>${item.title}</div>
+                    <div>Price: $${item.price.toFixed(2)}</div>
+                    <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)">
+                    <div>Total: $${itemTotal.toFixed(2)}</div>
+                    <div class="cart-actions">
+                        <button onclick="removeItem(${item.id})">Remove</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+
+            document.getElementById("total-price").innerText = totalPrice.toFixed(2);
+        }
+
+        function addItem() {
+            window.location.href = "product listing page.html";  // Redirect to product listing
+        }
+
+        function updateQuantity(itemId, newQuantity) {
+            const itemIndex = cart.findIndex(item => item.id === itemId);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity = parseInt(newQuantity);
+                localStorage.setItem("cart", JSON.stringify(cart));
+                renderCart();
+            }
+        }
+
+        function removeItem(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+        }
+
+        function proceedToCheckout() {
+    // Calculate total price before checkout
+    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    // Store subtotal in localStorage
+    localStorage.setItem("subtotal", totalPrice.toFixed(2));
+
+    // Redirect to checkout page
+    window.location.href = "checkout page.html";  // Update to your actual checkout page filename
+}
+
+        renderCart();
+    </script>
+</body>
+</html>

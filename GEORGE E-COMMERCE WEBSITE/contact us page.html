@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('file:///C:/Users/theDESIGNER/Downloads/pexels-luis-gomes-166706-546819.jpg'); /* Use the image URL or path */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 40px;
+            margin-bottom: 30px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .contact-form {
+            background-color: rgba(255, 255, 255, 0.8); /* Light background for readability */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .contact-form label {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .contact-form input:focus, .contact-form textarea:focus {
+            outline: none;
+            border: 1px solid #007bff;
+        }
+
+        .contact-form button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .contact-form button:hover {
+            background-color: #218838;
+        }
+
+        .contact-form button:active {
+            transform: scale(0.98);
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            color: green;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Contact Us</h1>
+
+    <div class="contact-form">
+        <form id="contact-form" onsubmit="return validateForm()">
+            <div>
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name">
+                <div id="name-error" class="error-message"></div>
+            </div>
+            <div>
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+                <div id="email-error" class="error-message"></div>
+            </div>
+            <div>
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" placeholder="Enter the subject of your message">
+                <div id="subject-error" class="error-message"></div>
+            </div>
+            <div>
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
+                <div id="message-error" class="error-message"></div>
+            </div>
+            <button type="submit">Send Message</button>
+        </form>
+
+        <div id="success-message" class="success-message"></div>
+    </div>
+
+    <script>
+        function validateForm() {
+            // Clear previous error messages
+            document.getElementById("name-error").innerText = "";
+            document.getElementById("email-error").innerText = "";
+            document.getElementById("subject-error").innerText = "";
+            document.getElementById("message-error").innerText = "";
+            document.getElementById("success-message").innerText = "";
+
+            let valid = true;
+
+            // Get form values
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const subject = document.getElementById("subject").value;
+            const message = document.getElementById("message").value;
+
+            // Name validation
+            if (!name) {
+                document.getElementById("name-error").innerText = "Name is required.";
+                valid = false;
+            }
+
+            // Email validation
+            if (!email) {
+                document.getElementById("email-error").innerText = "Email is required.";
+                valid = false;
+            } else if (!/\S+@\S+\.\S+/.test(email)) {
+                document.getElementById("email-error").innerText = "Please enter a valid email address.";
+                valid = false;
+            }
+
+            // Subject validation
+            if (!subject) {
+                document.getElementById("subject-error").innerText = "Subject is required.";
+                valid = false;
+            }
+
+            // Message validation
+            if (!message) {
+                document.getElementById("message-error").innerText = "Message is required.";
+                valid = false;
+            }
+
+            if (valid) {
+                document.getElementById("success-message").innerText = "Your message has been sent successfully!";
+                // Simulate form submission - in a real app, you would send the form data to the server here
+                document.getElementById("contact-form").reset();
+            }
+
+            // Prevent form submission if not valid
+            return valid;
+        }
+    </script>
+
+</body>
+</html>
